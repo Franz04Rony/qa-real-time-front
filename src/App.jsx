@@ -71,9 +71,11 @@ function App() {
     }
   };
 
+  const showScores = gameState && Object.keys(gameState.players).length > 0 && gameState.status !== 'LOBBY';
+
   return (
-    <div className="app-container">
-      {gameState && Object.keys(gameState.players).length > 0 && gameState.status !== 'LOBBY' && (
+    <div className={`app-container${showScores ? ' has-scores' : ''}`}>
+      {showScores && (
         <div className="score-overlay">
           {Object.values(gameState.players).map(p => (
             <div key={p.id} className="score-item">

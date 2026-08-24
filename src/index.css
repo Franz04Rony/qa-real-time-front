@@ -1,31 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
-  --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  --primary: #ff007a;
-  --secondary: #00fff2;
-  --glass: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  --bg-gradient: linear-gradient(135deg, #06140d 0%, #0c2418 100%);
+  --primary: #ff3d7f;
+  --secondary: #22e67a;
+  --glass: rgba(34, 230, 122, 0.08);
+  --glass-border: rgba(34, 230, 122, 0.22);
   --text: #ffffff;
+  --glow-green: rgba(34, 230, 122, 0.4);
+  --glow-magenta: rgba(255, 61, 127, 0.4);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   font-family: 'Outfit', sans-serif;
   background: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  overflow-x: hidden;
+  align-items: flex-start;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 #root {
   width: 100%;
   max-width: 1200px;
+  min-height: 100vh;
+  min-height: 100dvh;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+}
+
+.app-container {
+  width: 100%;
+}
+
+.app-container.has-scores {
+  padding-top: 0.5rem;
 }
 
 /* Glassmorphism Card */
@@ -38,6 +70,7 @@ body {
   padding: 2rem;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   animation: fadeIn 0.5s ease-out;
+  max-width: 100%;
 }
 
 /* Typography */
@@ -46,13 +79,22 @@ h1 {
   font-weight: 700;
   background: linear-gradient(to right, var(--secondary), var(--primary));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 2rem;
+  word-break: break-word;
+}
+
+h1.solid {
+  background: none;
+  -webkit-text-fill-color: var(--primary);
+  color: var(--primary);
 }
 
 h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  word-break: break-word;
 }
 
 p {
@@ -61,7 +103,17 @@ p {
   opacity: 0.9;
 }
 
+.winner-name {
+  font-size: 4rem;
+}
+
 /* Interactive Elements */
+.action-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 input {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--glass-border);
@@ -78,7 +130,7 @@ input {
 
 input:focus {
   border-color: var(--secondary);
-  box-shadow: 0 0 10px rgba(0, 255, 242, 0.3);
+  box-shadow: 0 0 10px var(--glow-green);
 }
 
 button {
@@ -93,11 +145,15 @@ button {
   transition: transform 0.2s, box-shadow 0.2s;
   text-transform: uppercase;
   letter-spacing: 1px;
+  max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 0, 122, 0.4);
+@media (hover: hover) {
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--glow-magenta);
+  }
 }
 
 button:active {
@@ -145,12 +201,32 @@ button.secondary {
   font-weight: 700;
   color: var(--secondary);
   margin: 1rem 0;
-  text-shadow: 0 0 20px rgba(0, 255, 242, 0.5);
+  text-shadow: 0 0 20px var(--glow-green);
+}
+
+.answers-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.answer-card {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.answer-card p {
+  word-break: break-word;
 }
 
 .voting-section {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 2rem;
   margin-top: 2rem;
 }
@@ -172,6 +248,8 @@ button.secondary {
 .score-board {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-bottom: 2rem;
   font-size: 1.5rem;
   font-weight: bold;
@@ -203,4 +281,84 @@ button.secondary {
 
 .score-item strong {
   color: var(--secondary);
+}
+
+.question-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding: 1rem 0.75rem;
+  }
+
+  .app-container.has-scores {
+    padding-top: 4.25rem;
+  }
+
+  .glass-card {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+
+  h1 {
+    font-size: 1.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  .winner-name {
+    font-size: 2.2rem;
+  }
+
+  .timer {
+    font-size: 2.5rem;
+  }
+
+  input,
+  button {
+    font-size: 1rem;
+  }
+
+  .answers-compare {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .voting-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .vote-btn {
+    width: 100%;
+  }
+
+  .score-overlay {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+
+  .score-board {
+    font-size: 1.15rem;
+    flex-direction: column;
+  }
+
+  .question-text {
+    font-size: 1.15rem;
+  }
 }

@@ -26,23 +26,23 @@ function GameScreen({ socket, gameState, myId }) {
             <h2>Ronda {gameState.round} / {gameState.maxRounds}</h2>
 
             <div style={{ margin: '2rem 0' }}>
-                <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                <p className="question-text">
                     {gameState.currentQuestion}
                 </p>
                 <small>(Piensa: ¿Qué respondería {otherPlayer ? otherPlayer.name : 'el otro'}?)</small>
             </div>
 
             {!submitted ? (
-                <div>
+                <form className="action-form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <input
                         type="text"
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
                         placeholder="Escribe tu respuesta..."
+                        enterKeyHint="send"
                     />
-                    <br />
-                    <button onClick={handleSubmit}>Listo</button>
-                </div>
+                    <button type="submit">Listo</button>
+                </form>
             ) : (
                 <div className="animate-pulse">
                     <h3>¡Respuesta enviada!</h3>

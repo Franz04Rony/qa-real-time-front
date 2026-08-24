@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Lobby({ socket, players, myId }) {
     const [nickname, setNickname] = useState('');
-    const [hasJoined, setHasJoined] = useState(false);
 
-    const handleJoin = () => {
+    const handleJoin = (event) => {
+        event.preventDefault();
         if (nickname.trim()) {
             socket.emit('join_game', nickname);
-            setHasJoined(true);
         }
     };
 
@@ -17,13 +16,27 @@ function Lobby({ socket, players, myId }) {
 
     const playerCount = Object.keys(players).length;
     const iAmJoined = players[myId];
+    const canStart = Boolean(iAmJoined) && playerCount === 2;
+
+    useEffect(() => {
+        if (!canStart) return;
+
+        const onKeyDown = (event) => {
+            if (event.key !== 'Enter' || event.repeat) return;
+            event.preventDefault();
+            handleStart();
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [canStart, socket]);
 
     return (
         <div className="glass-card">
             <h1>Quiz Battle 1v1</h1>
 
             {!iAmJoined ? (
-                <div>
+                <form className="action-form" onSubmit={handleJoin}>
                     <p>Ingresa tu Nickname para entrar:</p>
                     <input
                         type="text"
@@ -31,10 +44,11 @@ function Lobby({ socket, players, myId }) {
                         onChange={(e) => setNickname(e.target.value)}
                         placeholder="Nickname"
                         maxLength={15}
+                        autoComplete="nickname"
+                        enterKeyHint="go"
                     />
-                    <br />
-                    <button onClick={handleJoin}>Entrar</button>
-                </div>
+                    <button type="submit">Entrar</button>
+                </form>
             ) : (
                 <div>
                     <h2>¡Esperando jugador!</h2>
@@ -49,8 +63,8 @@ function Lobby({ socket, players, myId }) {
                         ))}
                     </div>
 
-                    {playerCount === 2 && (
-                        <button onClick={handleStart}>INICIAR JUEGO</button>
+                    {canStart && (
+                        <button type="button" onClick={handleStart}>INICIAR JUEGO</button>
                     )}
                 </div>
             )}

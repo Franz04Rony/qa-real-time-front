@@ -31,7 +31,7 @@ function ResultsScreen({ socket, gameState }) {
                 {winner ? (
                     <div>
                         <h2>🏆 ¡GANADOR! 🏆</h2>
-                        <h1 style={{ fontSize: '4rem' }}>{winner.name}</h1>
+                        <h1 className="winner-name">{winner.name}</h1>
                     </div>
                 ) : (
                     <h2>⚖️ ¡EMPATE! ⚖️</h2>

@@ -18,12 +18,12 @@ function VotingScreen({ socket, gameState, myId }) {
             <h2>Votación</h2>
             <p>Decide si la respuesta de <strong>{otherPlayer?.name}</strong> coincide con la realidad.</p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', margin: '2rem 0', textAlign: 'left' }}>
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '10px' }}>
+            <div className="answers-compare">
+                <div className="answer-card">
                     <h3>Tu Respuesta:</h3>
                     <p style={{ color: 'var(--secondary)', fontSize: '1.3rem' }}>"{myAnswer}"</p>
                 </div>
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '10px' }}>
+                <div className="answer-card">
                     <h3>Respuesta de {otherPlayer?.name}:</h3>
                     <p style={{ color: 'var(--primary)', fontSize: '1.3rem' }}>"{otherAnswer}"</p>
                 </div>
@@ -33,8 +33,8 @@ function VotingScreen({ socket, gameState, myId }) {
                 <div>
                     <p>¿Es correcta la respuesta de {otherPlayer?.name}?</p>
                     <div className="voting-section">
-                        <button className="vote-btn correct" onClick={() => handleVote(true)}>CORRECTA (+1)</button>
-                        <button className="vote-btn incorrect" onClick={() => handleVote(false)}>INCORRECTA (0)</button>
+                        <button type="button" className="vote-btn correct" onClick={() => handleVote(true)}>CORRECTA (+1)</button>
+                        <button type="button" className="vote-btn incorrect" onClick={() => handleVote(false)}>INCORRECTA (0)</button>
                     </div>
                 </div>
             ) : (

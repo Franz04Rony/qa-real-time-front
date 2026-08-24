@@ -12,8 +12,8 @@ function PunishmentScreen({ socket, gameState, myId }) {
     };
 
     return (
-        <div className="glass-card" style={{ borderColor: '#ff0055' }}>
-            <h1 style={{ color: '#ff0055' }}>¡CASTIGO!</h1>
+        <div className="glass-card" style={{ borderColor: 'var(--primary)' }}>
+            <h1 className="solid">¡CASTIGO!</h1>
 
             <div style={{ fontSize: '1.5rem', margin: '2rem 0' }}>
                 {gameState.currentPunishment}
@@ -21,9 +21,9 @@ function PunishmentScreen({ socket, gameState, myId }) {
 
             {amILoser ? (
                 <div>
-                    <p style={{ color: '#ffaaaa', fontWeight: 'bold' }}>¡Has fallado! Debes cumplir el castigo.</p>
+                    <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>¡Has fallado! Debes cumplir el castigo.</p>
                     {!done ? (
-                        <button onClick={handleDone} style={{ background: '#ff0055' }}>¡Listo, lo cumplí!</button>
+                        <button onClick={handleDone} style={{ background: 'var(--primary)' }}>¡Listo, lo cumplí!</button>
                     ) : (
                         <p>Esperando a que todos terminen...</p>
                     )}
