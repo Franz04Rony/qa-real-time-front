@@ -16,7 +16,8 @@ function Lobby({ socket, players, myId }) {
 
     const playerCount = Object.keys(players).length;
     const iAmJoined = players[myId];
-    const canStart = Boolean(iAmJoined) && playerCount === 2;
+    const allConnected = Object.values(players).every(p => p.connected);
+    const canStart = Boolean(iAmJoined) && playerCount === 2 && allConnected;
 
     useEffect(() => {
         if (!canStart) return;
@@ -59,6 +60,7 @@ function Lobby({ socket, players, myId }) {
                         {Object.values(players).map(p => (
                             <div key={p.id} style={{ fontSize: '1.2rem' }}>
                                 {p.id === myId ? 'tú: ' : 'rival: '} <strong>{p.name}</strong>
+                                {!p.connected && <span> (reconectando...)</span>}
                             </div>
                         ))}
                     </div>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 function GameScreen({ socket, gameState, myId }) {
     const [answer, setAnswer] = useState('');
-    const [submitted, setSubmitted] = useState(false);
+    const [submittedLocally, setSubmitted] = useState(false);
+    const submitted = submittedLocally || gameState.answers?.[myId] !== undefined;
 
     // Reset local state on new round
     useEffect(() => {
@@ -22,7 +23,8 @@ function GameScreen({ socket, gameState, myId }) {
 
     return (
         <div className="glass-card">
-            <div className="timer">{gameState.timer}s</div>
+            {/* Single text node: browser translators wrap text nodes and React crashes removing them */}
+            <div className="timer">{`${gameState.timer ?? ''}s`}</div>
             <h2>Ronda {gameState.round} / {gameState.maxRounds}</h2>
 
             <div style={{ margin: '2rem 0' }}>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 function PunishmentScreen({ socket, gameState, myId }) {
-    const [done, setDone] = useState(false);
+    const [doneLocally, setDone] = useState(false);
+    const done = doneLocally || (gameState.punishmentDone || []).includes(myId);
 
     const losers = gameState.punishmentLosers || [];
     const amILoser = losers.includes(myId);

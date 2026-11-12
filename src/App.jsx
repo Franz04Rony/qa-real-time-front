@@ -6,17 +6,29 @@ import VotingScreen from './components/VotingScreen';
 import PunishmentScreen from './components/PunishmentScreen';
 import ResultsScreen from './components/ResultsScreen';
 
-const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3001');
+// sessionStorage survives reloads but is separate per tab, so two tabs are two players
+function getPlayerId() {
+  const key = 'qa-player-id';
+  let id = sessionStorage.getItem(key);
+  if (!id) {
+    id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem(key, id);
+  }
+  return id;
+}
+
+const myId = getPlayerId();
+const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3002', {
+  auth: { playerId: myId }
+});
 
 function App() {
   const [gameState, setGameState] = useState(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [myId, setMyId] = useState(null);
 
   useEffect(() => {
     socket.on('connect', () => {
       setIsConnected(true);
-      setMyId(socket.id);
     });
 
     socket.on('disconnect', () => {
@@ -40,6 +52,10 @@ function App() {
       alert(msg);
     });
 
+    socket.on('notice', (msg) => {
+      alert(msg);
+    });
+
     return () => {
       socket.off('connect');
       socket.off('disconnect');
@@ -47,6 +63,7 @@ function App() {
       socket.off('timer_update');
       socket.off('game_reset');
       socket.off('error');
+      socket.off('notice');
     };
   }, []);
 
@@ -72,9 +89,22 @@ function App() {
   };
 
   const showScores = gameState && Object.keys(gameState.players).length > 0 && gameState.status !== 'LOBBY';
+  const disconnectedRival = Object.values(gameState.players).find(p => p.id !== myId && !p.connected);
+  const canGoBackToLobby = gameState.status !== 'LOBBY' && Boolean(gameState.players[myId]);
+
+  const handleBackToLobby = () => {
+    if (window.confirm('¿Volver al lobby? Se terminará la partida actual para los dos.')) {
+      socket.emit('back_to_lobby');
+    }
+  };
 
   return (
     <div className={`app-container${showScores ? ' has-scores' : ''}`}>
+      {disconnectedRival && gameState.status !== 'LOBBY' && (
+        <div className="glass-card animate-pulse" style={{ padding: '0.75rem 1rem', marginBottom: '1rem' }}>
+          {disconnectedRival.name} se desconectó. Esperando a que vuelva...
+        </div>
+      )}
       {showScores && (
         <div className="score-overlay">
           {Object.values(gameState.players).map(p => (
@@ -86,6 +116,11 @@ function App() {
         </div>
       )}
       {renderScreen()}
+      {canGoBackToLobby && (
+        <button type="button" className="secondary back-to-lobby" onClick={handleBackToLobby}>
+          Volver al lobby
+        </button>
+      )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 function VotingScreen({ socket, gameState, myId }) {
-    const [voted, setVoted] = useState(false);
+    const [votedLocally, setVoted] = useState(false);
+    const voted = votedLocally || gameState.votes?.[myId] !== undefined;
 
     const otherPlayerId = Object.keys(gameState.players).find(id => id !== myId);
     const otherPlayer = gameState.players[otherPlayerId];
